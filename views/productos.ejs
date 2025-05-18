@@ -1,6 +1,61 @@
-<h1>Lista de Productos</h1>
-<ul>
-  <% productos.forEach(p => { %>
-    <li><strong><%= p.name %></strong> - $<%= p.price %> - Stock: <%= p.stock %></li>
-  <% }); %>
-</ul>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Productos</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    h1 {
+      color: #333;
+    }
+    form {
+      margin-bottom: 30px;
+      padding: 15px;
+      border: 1px solid #ddd;
+      background: #f9f9f9;
+      border-radius: 5px;
+    }
+    .producto {
+      border: 1px solid #ccc;
+      padding: 10px;
+      margin-bottom: 10px;
+      border-radius: 5px;
+    }
+    input, textarea {
+      display: block;
+      margin-bottom: 10px;
+      width: 100%;
+      padding: 8px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Crear Producto</h1>
+  <form action="/productos" method="POST">
+    <input type="text" name="nombre" placeholder="Nombre del producto" required />
+    <textarea name="descripcion" placeholder="Descripción"></textarea>
+    <input type="text" name="categoria" placeholder="Categoría" required />
+    <input type="number" name="precio" placeholder="Precio" step="0.01" required />
+    <input type="number" name="stock" placeholder="Stock" required />
+    <button type="submit">Guardar</button>
+  </form>
+
+  <h1>Lista de Productos</h1>
+  <% if (productos.length === 0) { %>
+    <p>No hay productos cargados.</p>
+  <% } else { %>
+    <% productos.forEach(p => { %>
+      <div class="producto">
+        <h3><%= p.name %></h3>
+        <p><strong>Descripción:</strong> <%= p.description %></p>
+        <p><strong>Categoría:</strong> <%= p.category %></p>
+        <p><strong>Precio:</strong> $<%= p.price %></p>
+        <p><strong>Stock:</strong> <%= p.stock %></p>
+      </div>
+    <% }); %>
+  <% } %>
+</body>
+</html>

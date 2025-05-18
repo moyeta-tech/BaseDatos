@@ -1,5 +1,5 @@
 const express = require('express'); // Importamos express
-const Producto = require('../models/producto'); // Importamos el modelo de producto
+const Producto = require('../models/product'); // Importamos el modelo de producto
 const router = express.Router(); // Creamos un router para manejar las rutas de productos
 
 // Creamos un nuevo producto
@@ -19,10 +19,12 @@ router.post('/', async (req, res) => { // Ruta para crear un nuevo producto
 router.get('/', async (req, res) => {
   try {
     const productos = await Producto.find();
-    res.json(productos);
+    res.render('productos', { productos });
   } catch (err) {
+    console.error("Error al obtener productos:", err);
     res.status(500).send('Error al obtener productos');
   }
 });
+
 
 module.exports = router;
