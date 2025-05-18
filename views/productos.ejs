@@ -1,0 +1,6 @@
+<h1>Lista de Productos</h1>
+<ul>
+  <% productos.forEach(p => { %>
+    <li><strong><%= p.name %></strong> - $<%= p.price %> - Stock: <%= p.stock %></li>
+  <% }); %>
+</ul>
