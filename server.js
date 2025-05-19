@@ -16,6 +16,7 @@ app.set('views', './views'); // Establecemos la carpeta de vistas
 
 app.use('/productos', require('./routes/productos')); // Usamos las rutas de productos
 app.use('/pedidos', require('./routes/pedidos')); // Usamos las rutas de pedidos
+app.use('/clientes', require('./routes/clientes')); // Usamos las rutas de clientes
 
 const PORT = process.env.PORT || 5000; // Establecemos el puerto del servidor
 app.listen(PORT, () => console.log(`Servidor corriendo en el puerto ${PORT}`)); // Iniciamos el servidor y mostramos un mensaje en la consola

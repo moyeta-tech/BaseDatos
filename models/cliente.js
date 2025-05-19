@@ -6,12 +6,12 @@ const clienteSchema = new Schema({ // Definimos el esquema del cliente
     type: String, 
     required: true
  },
-  email: { // Correo electrónico del cliente
+  correo: { // Correo electrónico del cliente
     type: String,
     required: true 
 },
-  phone: String,
-  address: String 
+  telefono: String,
+  direccion: String 
 });
 
 module.exports = mongoose.model('Cliente', clienteSchema); // Exportamos el modelo Cliente para usarlo en otros archivos

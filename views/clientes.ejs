@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Clientes</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    form { margin-bottom: 30px; padding: 15px; border: 1px solid #ddd; background: #f9f9f9; border-radius: 5px; }
+    .cliente { border: 1px solid #ccc; padding: 10px; margin-bottom: 10px; border-radius: 5px; }
+    input { display: block; margin-bottom: 10px; width: 100%; padding: 8px; }
+  </style>
+</head>
+<body>
+  <h1>Agregar Cliente</h1>
+  <form action="/clientes" method="POST">
+    <input type="text" name="nombre" placeholder="Nombre" required />
+    <input type="email" name="correo" placeholder="Correo electrónico" required />
+    <input type="text" name="telefono" placeholder="Teléfono" />
+    <input type="text" name="direccion" placeholder="Dirección" />
+    <button type="submit">Guardar</button>
+  </form>
+
+  <h1>Lista de Clientes</h1>
+  <% if (clientes.length === 0) { %>
+    <p>No hay clientes cargados.</p>
+  <% } else { %>
+    <% clientes.forEach(c => { %>
+      <div class="cliente">
+        <h3><%= c.nombre %></h3>
+        <p><strong>Correo:</strong> <%= c.correo %></p>
+        <p><strong>Teléfono:</strong> <%= c.telefono %></p>
+        <p><strong>Dirección:</strong> <%= c.direccion %></p>
+      </div>
+    <% }); %>
+  <% } %>
+</body>
+</html>
