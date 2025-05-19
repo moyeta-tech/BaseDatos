@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Pedidos</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        form { margin-bottom: 30px; padding: 15px; border: 1px solid #ddd; background: #f9f9f9; border-radius: 5px; }
+        .pedido { border: 1px solid #ccc; padding: 10px; margin-bottom: 10px; border-radius: 5px; }
+        select, input { display: block; margin-bottom: 10px; width: 100%; padding: 8px; }
+    </style>
+</head>
+<body>
+    <h1>Crear Pedido</h1>
+    <form action="/pedidos" method="POST">
+        <label>Cliente:</label>
+        <select name="cliente_id" required>
+            <% clientes.forEach(cliente => { %>
+                <option value="<%= cliente._id %>" data-nombre="<%= cliente.nombre %>" data-email="<%= cliente.correo %>">
+                    <%= cliente.nombre %> (<%= cliente.correo %>)
+                </option>
+            <% }); %>
+        </select>
+        <label>Producto:</label>
+        <select name="producto_id" required>
+            <% productos.forEach(producto => { %>
+                <option value="<%= producto._id %>" data-nombre="<%= producto.name %>" data-precio="<%= producto.price %>">
+                    <%= producto.name %> ($<%= producto.price %>)
+                </option>
+            <% }); %>
+        </select>
+        <input type="number" name="cantidad" placeholder="Cantidad" min="1" required />
+        <button type="submit">Guardar Pedido</button>
+    </form>
+
+    <h1>Lista de Pedidos</h1>
+    <% if (pedidos.length === 0) { %>
+        <p>No hay pedidos cargados.</p>
+    <% } else { %>
+        <% pedidos.forEach(p => { %>
+            <div class="pedido">
+                <p><strong>Cliente:</strong> <%= p.cliente.name %> (<%= p.cliente.email %>)</p>
+                <p><strong>Productos:</strong></p>
+                <ul>
+                  <% p.productos.forEach(prod => { %>
+                    <li>
+                      <%= prod.nombre %> - $<%= prod.precio_unitario %> x <%= prod.cantidad %>
+                    </li>
+                  <% }); %>
+                </ul>
+                <p><strong>Fecha:</strong> <%= p.fecha_pedido.toLocaleDateString() %></p>
+                <p><strong>Estado:</strong> <%= p.estado %></p>
+                <p><strong>Total:</strong> $<%= p.total %></p>
+            </div>
+        <% }); %>
+    <% } %>
+</body>
+</html>
