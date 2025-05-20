@@ -47,14 +47,27 @@
   <% if (productos.length === 0) { %>
     <p>No hay productos cargados.</p>
   <% } else { %>
+
     <% productos.forEach(p => { %>
-      <div class="producto">
-        <h3><%= p.name %></h3>
-        <p><strong>Descripción:</strong> <%= p.description %></p>
-        <p><strong>Categoría:</strong> <%= p.category %></p>
-        <p><strong>Precio:</strong> $<%= p.price %></p>
-        <p><strong>Stock:</strong> <%= p.stock %></p>
-      </div>
+    <div class="producto">
+    <h3><%= p.nombre %></h3>
+    <p><strong>Descripción:</strong> <%= p.descripcion %></p>
+    <p><strong>Categoría:</strong> <%= p.categoria %></p>
+    <p><strong>Precio:</strong> $<%= p.precio %></p>
+    <p><strong>Stock:</strong> <%= p.stock %></p>
+
+    <!--Botón para eliminar-->
+    <span>Formulario de eliminación generado</span>
+
+    <form action="/productos/eliminar/<%= p._id %>" method="POST" onsubmit="return confirm('¿Estás seguro de eliminar este producto?');">
+      <button type="submit" style="background-color: red; color: white; border: none; padding: 5px 10px;">Eliminar</button>
+    </form>
+    </div>
+
+    <!--Boton para editar-->
+    <a href="/productos/editar/<%= p._id %>" style="background-color: #007bff; color: white; padding: 5px 10px; text-decoration: none; display: inline-block; margin-top: 5px;">Editar</a>
+
+    
     <% }); %>
   <% } %>
 </body>
