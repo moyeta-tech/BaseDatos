@@ -6,7 +6,7 @@ const router = express.Router();
 router.post('/', async (req, res) => {
   const { nombre, correo, telefono, direccion } = req.body;
   try {
-    const nuevoCliente = new Cliente({ nombre, correo, telefono, direccion });
+    const nuevoCliente = new Cliente({ name: nombre, correo, telefono, direccion });
     await nuevoCliente.save();
     res.redirect('/clientes'); // Redirige a la lista de clientes
   } catch (err) {
@@ -25,4 +25,14 @@ router.get('/', async (req, res) => {
   }
 });
 
-module.exports = router;
+// Eliminar cliente por ID
+router.post('/eliminar/:id', async (req, res) =>
+ {
+   try {
+    await Cliente.findByIdAndDelete(req.params.id);
+    res.redirect('/clientes'); // Redirige a la lista de clientes
+   } catch (e) {
+    res.status(500).send('Error al eliminar cliente');
+   }
+ });
+  module.exports = router;
