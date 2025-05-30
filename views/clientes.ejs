@@ -23,7 +23,7 @@
       <input type="email" name="correo" placeholder="Correo electrónico" required />
       <input type="text" name="telefono" placeholder="Teléfono" pattern="[0-9]+" title="Solo numeros" />
       <input type="text" name="direccion" placeholder="Dirección" />
-      <button type="submit" class="btn btn-primary">Guardar</button>
+      <button type="submit" class="btn btn-success">Guardar</button>
     </form>
 
     <h1>Lista de Clientes</h1>
@@ -37,10 +37,9 @@
           <p><strong>Teléfono:</strong> <%= c.telefono %></p>
           <p><strong>Dirección:</strong> <%= c.direccion %></p>
 
-          <a href="/clientes/editar/<%= c._id %>" class="btn btn-warning">Editar</a>
-
-          <form action="/clientes/eliminar/<%= c._id %>" method="POST" onsubmit="return confirm('¿Estás seguro de eliminar este cliente?');" style="display:inline;">
+          <form action="/clientes/eliminar/<%= c._id %>" method="POST" onsubmit="return confirm('¿Estás seguro de eliminar este cliente?');">
           <button type="submit" class="btn btn-danger">Eliminar</button>
+          <a href="/clientes/editar/<%= c._id %>" class="btn btn-info ml-3">Editar</a>
           </form>
         </div>
       <% }); %>

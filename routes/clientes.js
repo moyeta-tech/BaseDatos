@@ -6,7 +6,7 @@ const router = express.Router(); // Importa el modelo Cliente
 router.post('/', async (req, res) => {
   const { nombre, correo, telefono, direccion } = req.body;
   try {
-    const nuevoCliente = new Cliente({ nombre, correo, telefono, direccion });
+    const nuevoCliente = new Cliente({ name: nombre, correo, telefono, direccion });
     await nuevoCliente.save();
     res.redirect('/clientes');
   } catch (err) {
@@ -46,7 +46,7 @@ router.post('/editar/:id', async (req, res) => {
   const { nombre, correo, telefono, direccion } = req.body;
   try {
     await Cliente.findByIdAndUpdate(req.params.id, {
-      nombre,
+      name: nombre,
       correo,
       telefono,
       direccion
