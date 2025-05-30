@@ -15,26 +15,28 @@
 </head>
 <body>
     <h1>Crear Pedido</h1>
-    <form action="/pedidos" method="POST">
-        <label>Cliente:</label>
-        <select name="cliente_id" required>
-            <% clientes.forEach(cliente => { %>
-                <option value="<%= cliente._id %>" data-nombre="<%= cliente.nombre %>" data-email="<%= cliente.correo %>">
-                    <%= cliente.nombre %> (<%= cliente.correo %>)
-                </option>
-            <% }); %>
-        </select>
-        <label>Producto:</label>
-        <select name="producto_id" required>
-            <% productos.forEach(producto => { %>
-                <option value="<%= producto._id %>" data-nombre="<%= producto.name %>" data-precio="<%= producto.price %>">
-                    <%= producto.name %> ($<%= producto.price %>)
-                </option>
-            <% }); %>
-        </select>
-        <input type="number" name="cantidad" placeholder="Cantidad" min="1" required />
-        <button type="submit" class="btn btn-primary">Guardar Pedido</button>
-    </form>
+<form action="/pedidos" method="POST">
+    <label>Cliente:</label>
+    <select name="cliente_id" required>
+        <% clientes.forEach(cliente => { %>
+            <option value="<%= cliente._id %>" data-nombre="<%= cliente.nombre %>" data-email="<%= cliente.correo %>">
+                <%= cliente.nombre %> (<%= cliente.correo %>)
+            </option>
+        <% }); %>
+    </select>
+
+    <h3>Productos:</h3>
+    <% productos.forEach(producto => { %>
+        <div class="mb-3">
+            <input type="checkbox" name="producto_id" value="<%= producto._id %>" />
+            <%= producto.nombre %> ($<%= producto.precio %>)
+            <input type="number" name="cantidad_<%= producto._id %>" placeholder="Cantidad" min="1" />
+        </div>
+    <% }); %>
+
+    <button type="submit" class="btn btn-primary">Guardar Pedido</button>
+</form>
+
 
     <h1>Lista de Pedidos</h1>
     <% if (pedidos.length === 0) { %>
@@ -42,7 +44,7 @@
     <% } else { %>
         <% pedidos.forEach(p => { %>
             <div class="pedido">
-                <p><strong>Cliente:</strong> <%= p.cliente.name %> (<%= p.cliente.email %>)</p>
+                <p><strong>Cliente:</strong> <%= p.cliente.nombre %> (<%= p.cliente.correo %>)</p>
                 <p><strong>Productos:</strong></p>
                 <ul>
                   <% p.productos.forEach(prod => { %>
@@ -51,7 +53,7 @@
                     </li>
                   <% }); %>
                 </ul>
-                <p><strong>Fecha:</strong> <%= p.fecha_pedido.toLocaleDateString() %></p>
+                <p><strong>Fecha:</strong> <%= p.fecha.toLocaleDateString() %></p>
                 <p><strong>Estado:</strong> <%= p.estado %></p>
                 <p><strong>Total:</strong> $<%= p.total %></p>
             </div>

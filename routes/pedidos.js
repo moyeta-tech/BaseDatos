@@ -1,8 +1,8 @@
-const express = require('express');
-const Pedido = require('../models/pedido');
-const Product = require('../models/product');
-const Cliente = require('../models/cliente');
-const router = express.Router();
+const express = require('express'); // Importamos express
+const Pedido = require('../models/pedido'); // Importamos el modelo Pedido
+const Product = require('../models/product'); // Importamos el modelo Product
+const Cliente = require('../models/cliente'); // Importamos el modelo Cliente
+const router = express.Router(); // Creamos un router para manejar las rutas de pedidos
 
 // Mostrar formulario y lista de pedidos
 router.get('/', async (req, res) => {
@@ -17,42 +17,57 @@ router.get('/', async (req, res) => {
   }
 });
 
-// Crear un nuevo pedido
+// Crear un nuevo pedido con múltiples productos
 router.post('/', async (req, res) => {
   try {
-    // Recibe los IDs y busca los datos completos
     const clienteDB = await Cliente.findById(req.body.cliente_id);
-    const productoDB = await Product.findById(req.body.producto_id);
+    const productosSeleccionados = req.body.producto_id;
 
-    const cantidad = parseInt(req.body.cantidad, 10);
-    const total = productoDB.price * cantidad;
+    const todosProductos = await Product.find();
+
+    let total = 0;
+    const listaProductos = [];
+
+    // Si solo hay un producto seleccionado, convertirlo a array
+    const productosArray = Array.isArray(productosSeleccionados) ? productosSeleccionados : [productosSeleccionados];
+
+    for (let id of productosArray) {
+      const prod = todosProductos.find(p => p._id.toString() === id);
+      const cantidad = parseInt(req.body[`cantidad_${id}`], 10);
+
+      if (prod && cantidad > 0) {
+        listaProductos.push({
+          id_producto: prod._id,
+          nombre: prod.nombre,
+          precio_unitario: prod.precio,
+          cantidad
+        });
+
+        total += prod.precio * cantidad;
+
+        // Actualizar stock
+        await Product.updateOne(
+          { _id: prod._id },
+          { $inc: { stock: -cantidad } }
+        );
+      }
+    }
 
     const pedido = new Pedido({
       cliente: {
         id: clienteDB._id,
-        name: clienteDB.nombre,
-        email: clienteDB.correo
+        nombre: clienteDB.nombre,
+        correo: clienteDB.correo
       },
-      productos: [{
-        id_producto: productoDB._id,
-        nombre: productoDB.name,
-        precio_unitario: productoDB.price,
-        cantidad: cantidad
-      }],
-      total: total,
+      productos: listaProductos,
+      total,
       estado: 'pendiente',
-      fecha_pedido: new Date()
+      fecha: new Date()
     });
 
     await pedido.save();
-
-    // Actualizar stock
-    await Product.updateOne(
-      { _id: productoDB._id },
-      { $inc: { stock: -cantidad } }
-    );
-
     res.redirect('/pedidos');
+
   } catch (error) {
     console.error(error);
     res.status(500).send("Error al procesar pedido");
