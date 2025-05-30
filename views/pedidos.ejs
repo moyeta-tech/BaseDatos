@@ -1,70 +1,85 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" 
-    rel="stylesheet" integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" 
-    crossorigin="anonymous"> <!-- Enlace a Bootstrap para estilos -->
-    <title>Pedidos</title>
-    <style>
-        body { font-family: Arial, sans-serif; padding: 20px; }
-        form { margin-bottom: 30px; padding: 15px; border: 1px solid #ddd; background: #f9f9f9; border-radius: 5px; }
-        .pedido { border: 1px solid #ccc; padding: 10px; margin-bottom: 10px; border-radius: 5px; }
-        select, input { display: block; margin-bottom: 10px; width: 100%; padding: 8px; }
-    </style>
-</head>
-<body>
-    <h1>Crear Pedido</h1>
-<form action="/pedidos" method="POST">
-    <label>Cliente:</label>
-    <select name="cliente_id" required>
-        <% clientes.forEach(cliente => { %>
-            <option value="<%= cliente._id %>" data-nombre="<%= cliente.nombre %>" data-email="<%= cliente.correo %>">
-                <%= cliente.nombre %> (<%= cliente.correo %>)
-            </option>
-        <% }); %>
-    </select>
+    <head>
+        <meta charset="UTF-8">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" 
+        rel="stylesheet" integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" 
+        crossorigin="anonymous"> <!-- Enlace a Bootstrap para estilos -->
+        <title>Pedidos</title>
 
-    <h3>Productos:</h3>
-    <% productos.forEach(producto => { %>
-        <div class="mb-3">
-            <input type="checkbox" name="producto_id" value="<%= producto._id %>" />
-            <%= producto.nombre %> ($<%= producto.precio %>)
-            <input type="number" name="cantidad_<%= producto._id %>" placeholder="Cantidad" min="1" />
-        </div>
-    <% }); %>
+        <!-- Estilos personalizados -->
+        <style>
+            body { font-family: Arial, sans-serif; padding: 20px; }
+            form { margin-bottom: 30px; padding: 15px; border: 1px solid #ddd; background: #f9f9f9; border-radius: 5px; }
+            .pedido { border: 1px solid #ccc; padding: 10px; margin-bottom: 10px; border-radius: 5px; }
+            select, input { display: block; margin-bottom: 10px; width: 100%; padding: 8px; }
+        </style>
+    </head>
 
-    <button type="submit" class="btn btn-primary">Guardar Pedido</button>
-</form>
+    <script>
+    document.querySelector('form').addEventListener('submit', function(e) {
+        const checkboxes = document.querySelectorAll('input[type="checkbox"][name="producto_id"]');
+        const oneChecked = Array.from(checkboxes).some(cb => cb.checked);
 
+        if (!oneChecked) {
+        e.preventDefault();
+        alert('Debes seleccionar al menos un producto.');
+        }
+    });
+    </script>
 
-    <h1>Lista de Pedidos</h1>
-    <% if (pedidos.length === 0) { %>
-        <p>No hay pedidos cargados.</p>
-    <% } else { %>
-        <% pedidos.forEach(p => { %>
-            <div class="pedido">
-                <p><strong>Cliente:</strong> <%= p.cliente.nombre %> (<%= p.cliente.correo %>)</p>
-                <p><strong>Productos:</strong></p>
-                <ul>
-                  <% p.productos.forEach(prod => { %>
-                    <li>
-                      <%= prod.nombre %> - $<%= prod.precio_unitario %> x <%= prod.cantidad %>
-                    </li>
-                  <% }); %>
-                </ul>
-                <p><strong>Fecha:</strong> <%= p.fecha.toLocaleDateString() %></p>
-                <p><strong>Estado:</strong> <%= p.estado %></p>
-                <p><strong>Total:</strong> $<%= p.total %></p>
-                <a href="/pedidos/editar/<%= p._id %>" class="btn btn-warning btn-sm">Editar Estado</a>
+    <body>
+        <h1>Crear Pedido</h1>
+    <form action="/pedidos" method="POST">
+        <label>Cliente:</label>
+        <select name="cliente_id" required>
+            <% clientes.forEach(cliente => { %>
+                <option value="<%= cliente._id %>" data-nombre="<%= cliente.nombre %>" data-email="<%= cliente.correo %>">
+                    <%= cliente.nombre %> (<%= cliente.correo %>)
+                </option>
+            <% }); %>
+        </select>
 
-                <form action="/pedidos/eliminar/<%= p._id %>" method="POST" style="display:inline;" onsubmit="return confirm('¿Estás seguro de eliminar este pedido?');">
-                    <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
-                </form>
-
+        <h3>Productos:</h3>
+        <% productos.forEach(producto => { %>
+            <div class="mb-3">
+                <input type="checkbox" name="producto_id" value="<%= producto._id %>" />
+                <%= producto.nombre %> ($<%= producto.precio %>)
+                <input type="number" name="cantidad_<%= producto._id %>" placeholder="Cantidad" min="1" />
             </div>
         <% }); %>
-    <% } %>
-    <a href="/" class="btn btn-warning" class="text-center">Volver al inicio</a> <!-- Botón para volver al inicio -->
-</body>
+
+        <button type="submit" class="btn btn-primary">Guardar Pedido</button>
+    </form>
+
+
+        <h1>Lista de Pedidos</h1>
+        <% if (pedidos.length === 0) { %>
+            <p>No hay pedidos cargados.</p>
+        <% } else { %>
+            <% pedidos.forEach(p => { %>
+                <div class="pedido">
+                    <p><strong>Cliente:</strong> <%= p.cliente.nombre %> (<%= p.cliente.correo %>)</p>
+                    <p><strong>Productos:</strong></p>
+                    <ul>
+                    <% p.productos.forEach(prod => { %>
+                        <li>
+                        <%= prod.nombre %> - $<%= prod.precio_unitario %> x <%= prod.cantidad %>
+                        </li>
+                    <% }); %>
+                    </ul>
+                    <p><strong>Fecha:</strong> <%= p.fecha.toLocaleDateString() %></p>
+                    <p><strong>Estado:</strong> <%= p.estado %></p>
+                    <p><strong>Total:</strong> $<%= p.total %></p>
+                    <a href="/pedidos/editar/<%= p._id %>" class="btn btn-warning btn-sm">Editar Estado</a>
+
+                    <form action="/pedidos/eliminar/<%= p._id %>" method="POST" style="display:inline;" onsubmit="return confirm('¿Estás seguro de eliminar este pedido?');">
+                        <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
+                    </form>
+
+                </div>
+            <% }); %>
+        <% } %>
+        <a href="/" class="btn btn-warning" class="text-center">Volver al inicio</a> <!-- Botón para volver al inicio -->
+    </body>
 </html>

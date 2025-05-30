@@ -19,9 +19,9 @@
   <body>
     <h1>Agregar Cliente</h1>
     <form action="/clientes" method="POST">
-      <input type="text" name="nombre" placeholder="Nombre" required />
+      <input type="text" name="nombre" placeholder="Nombre" required minlength="3" />
       <input type="email" name="correo" placeholder="Correo electrónico" required />
-      <input type="text" name="telefono" placeholder="Teléfono" />
+      <input type="text" name="telefono" placeholder="Teléfono" pattern="[0-9]+" title="Solo numeros" />
       <input type="text" name="direccion" placeholder="Dirección" />
       <button type="submit" class="btn btn-primary">Guardar</button>
     </form>
