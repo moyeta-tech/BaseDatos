@@ -4,7 +4,21 @@ const Product = require('../models/product'); // Importamos el modelo Product
 const Cliente = require('../models/cliente'); // Importamos el modelo Cliente
 const router = express.Router(); // Creamos un router para manejar las rutas de pedidos
 
-// Mostrar formulario y lista de pedidos
+//Muestra formulario para crear un nuevo pedido
+router.get('/editar/:id', async (req, res) => {
+  const pedido = await Pedido.findById(req.params.id);
+  res.render('editarPedido', { pedido });
+});
+
+// Actualiza un pedido existente
+router.post('/editar/:id', async (req, res) => {
+  const { estado } = req.body;
+  await Pedido.findByIdAndUpdate(req.params.id, { estado });
+  res.redirect('/pedidos');
+});
+
+
+// Muestra todos los pedidos y permite crear uno nuevo
 router.get('/', async (req, res) => {
   try {
     const pedidos = await Pedido.find();
@@ -73,5 +87,12 @@ router.post('/', async (req, res) => {
     res.status(500).send("Error al procesar pedido");
   }
 });
+
+// Elimina un pedido por su ID
+router.post('/eliminar/:id', async (req, res) => {
+  await Pedido.findByIdAndDelete(req.params.id);
+  res.redirect('/pedidos');
+});
+
 
 module.exports = router;

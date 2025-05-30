@@ -56,6 +56,12 @@
                 <p><strong>Fecha:</strong> <%= p.fecha.toLocaleDateString() %></p>
                 <p><strong>Estado:</strong> <%= p.estado %></p>
                 <p><strong>Total:</strong> $<%= p.total %></p>
+                <a href="/pedidos/editar/<%= p._id %>" class="btn btn-warning btn-sm">Editar Estado</a>
+
+                <form action="/pedidos/eliminar/<%= p._id %>" method="POST" style="display:inline;" onsubmit="return confirm('¿Estás seguro de eliminar este pedido?');">
+                    <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
+                </form>
+
             </div>
         <% }); %>
     <% } %>
