@@ -30,27 +30,46 @@
 
     <body>
         <h1>Crear Pedido</h1>
-    <form action="/pedidos" method="POST">
-        <label>Cliente:</label>
-        <select name="cliente_id" required>
-            <% clientes.forEach(cliente => { %>
-                <option value="<%= cliente._id %>" data-nombre="<%= cliente.nombre %>" data-email="<%= cliente.correo %>">
-                    <%= cliente.nombre %> (<%= cliente.correo %>)
-                </option>
+        <form action="/pedidos" method="POST">
+            <label>Cliente:</label>
+            <select name="cliente_id" required>
+                <% clientes.forEach(cliente => { %>
+                    <option value="<%= cliente._id %>" data-nombre="<%= cliente.nombre %>" data-email="<%= cliente.correo %>">
+                        <%= cliente.nombre %> (<%= cliente.correo %>)
+                    </option>
+                <% }); %>
+            </select>
+
+            <h3>Productos:</h3>
+            <% productos.forEach(producto => { %>
+                <div class="mb-3">
+                    <input type="checkbox" name="producto_id" value="<%= producto._id %>" />
+                    <%= producto.nombre %> ($<%= producto.precio %>)
+                    <input type="number" name="cantidad_<%= producto._id %>" placeholder="Cantidad" min="1" />
+                </div>
             <% }); %>
-        </select>
 
-        <h3>Productos:</h3>
-        <% productos.forEach(producto => { %>
-            <div class="mb-3">
-                <input type="checkbox" name="producto_id" value="<%= producto._id %>" />
-                <%= producto.nombre %> ($<%= producto.precio %>)
-                <input type="number" name="cantidad_<%= producto._id %>" placeholder="Cantidad" min="1" />
+            <button type="submit" class="btn btn-success">Guardar Pedido</button>
+        </form>
+
+        <form action="/pedidos" method="GET" class="mb-3">
+            <div class="row">
+                <div class="col-md-4">
+                    <label for="estado">Filtrar por estado:</label>
+                    <select name="estado" id="estado" class="form-control">
+                        <option value="todos" <%= estadoSeleccionado === 'todos' ? 'selected' : '' %>>Todos</option>
+                        <option value="pendiente" <%= estadoSeleccionado === 'pendiente' ? 'selected' : '' %>>Pendiente</option>
+                        <option value="enviado" <%= estadoSeleccionado === 'enviado' ? 'selected' : '' %>>Enviado</option>
+                        <option value="entregado" <%= estadoSeleccionado === 'entregado' ? 'selected' : '' %>>Entregado</option>
+                    </select>
+                </div>
+                <div class="col-md-3 d-flex align-items-end">
+                    <button type="submit" class="btn btn-primary me-2">Filtrar</button>
+                    <a href="/pedidos" class="btn btn-secondary">Limpiar</a>
+                </div>
             </div>
-        <% }); %>
+        </form>
 
-        <button type="submit" class="btn btn-success">Guardar Pedido</button>
-    </form>
 
 
         <h1>Lista de Pedidos</h1>

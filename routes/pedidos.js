@@ -21,15 +21,30 @@ router.post('/editar/:id', async (req, res) => {
 // Muestra todos los pedidos y permite crear uno nuevo
 router.get('/', async (req, res) => {
   try {
-    const pedidos = await Pedido.find();
+    const estadoFiltro = req.query.estado;
+    let pedidos;
+
+    if (estadoFiltro && estadoFiltro !== 'todos') {
+      pedidos = await Pedido.find({ estado: estadoFiltro });
+    } else {
+      pedidos = await Pedido.find();
+    }
+
     const clientes = await Cliente.find();
     const productos = await Product.find();
-    res.render('pedidos', { pedidos, clientes, productos });
+
+    res.render('pedidos', {
+      pedidos,
+      clientes,
+      productos,
+      estadoSeleccionado: estadoFiltro || 'todos'
+    });
   } catch (err) {
     console.error(err);
     res.status(500).send('Error al obtener pedidos');
   }
 });
+
 
 // Crear un nuevo pedido con múltiples productos
 router.post('/', async (req, res) => {
