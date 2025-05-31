@@ -5,13 +5,39 @@ const router = express.Router(); // Creamos un router para manejar las rutas de 
 // Obtener productos
 router.get('/', async (req, res) => {
   try {
-    const productos = await Producto.find();
-    res.render('productos', { productos });
+    const queryNombre = req.query.busqueda;
+    const queryCategoria = req.query.categoria;
+
+    let filtro = {};
+
+    // Si hay búsqueda por nombre
+    if (queryNombre) {
+      filtro.nombre = { $regex: queryNombre, $options: 'i' };
+    }
+
+    // Si hay filtro por categoría
+    if (queryCategoria && queryCategoria !== 'todas') {
+      filtro.categoria = { $regex: queryCategoria, $options: 'i' };
+    }
+
+    const productos = await Producto.find(filtro);
+
+    // Obtener lista única de categorías para el select
+    const categorias = await Producto.distinct('categoria');
+
+    res.render('productos', {
+      productos,
+      busqueda: queryNombre || '',
+      categoriaSeleccionada: queryCategoria || 'todas',
+      categorias
+    });
   } catch (err) {
     console.error("Error al obtener productos:", err);
     res.status(500).send('Error al obtener productos');
   }
 });
+
+
 
 // Creamos un nuevo producto
 router.post('/', async (req, res) => { // Ruta para crear un nuevo producto

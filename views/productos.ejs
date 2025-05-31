@@ -50,6 +50,28 @@
       <button type="submit" class="btn btn-success">Guardar</button>
     </form>
 
+    <form action="/productos" method="GET" class="mb-3">
+      <div class="row">
+        <div class="col-md-5">
+          <input type="text" name="busqueda" value="<%= busqueda %>" placeholder="Buscar por nombre" class="form-control" />
+        </div>
+        <div class="col-md-4">
+          <select name="categoria" class="form-control">
+            <option value="todas">Todas las categorías</option>
+            <% categorias.forEach(cat => { %>
+              <option value="<%= cat %>" <%= categoriaSeleccionada === cat ? 'selected' : '' %>><%= cat %></option>
+            <% }); %>
+          </select>
+        </div>
+        
+        <div class="col-md-3 d-flex align-items-end">
+          <button type="submit" class="btn btn-primary me-2">Buscar</button>
+          <a href="/productos" class="btn btn-secondary">Limpiar</a>
+        </div>
+      </div>
+    </form>
+
+
     <h1>Lista de Productos</h1>
     <% if (productos.length === 0) { %>
       <p>No hay productos cargados.</p>
