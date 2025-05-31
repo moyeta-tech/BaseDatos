@@ -14,16 +14,30 @@ router.post('/', async (req, res) => {
   }
 });
 
-// Mostrar lista de clientes
+// Mostrar lista de clientes con buscador
 router.get('/', async (req, res) => {
   try {
-    const clientes = await Cliente.find();
-    res.render('clientes', { clientes });
+    const query = req.query.busqueda;
+    let clientes;
+
+    if (query) {
+      clientes = await Cliente.find({
+        $or: [
+          { nombre: { $regex: query, $options: 'i' } },
+          { correo: { $regex: query, $options: 'i' } }
+        ]
+      });
+    } else {
+      clientes = await Cliente.find();
+    }
+
+    res.render('clientes', { clientes, busqueda: query || '' });
   } catch (err) {
     console.error("Error al obtener clientes:", err);
     res.status(500).send('Error al obtener clientes');
   }
 });
+
 
 // Mostrar formulario para crear nuevo cliente
 router.get('/nuevo', (req, res) => {

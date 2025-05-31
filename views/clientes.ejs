@@ -26,6 +26,12 @@
       <button type="submit" class="btn btn-success">Guardar</button>
     </form>
 
+    <form action="/clientes" method="GET" class="mb-3">
+      <input type="text" name="busqueda" value="<%= busqueda %>" placeholder="Buscar por nombre o correo" class="form-control" />
+      <button type="submit" class="btn btn-primary mt-2">Buscar</button>
+      <a href="/clientes" class="btn btn-secondary mt-2">Limpiar</a>
+    </form>
+
     <h1>Lista de Clientes</h1>
     <% if (clientes.length === 0) { %>
       <p>No hay clientes cargados.</p>
