@@ -71,6 +71,12 @@
       </div>
     </form>
 
+    <% if (mensaje) { %>
+      <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <%= mensaje %>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    <% } %>
 
     <h1>Lista de Productos</h1>
     <% if (productos.length === 0) { %>

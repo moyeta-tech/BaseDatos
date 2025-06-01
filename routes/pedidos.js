@@ -4,7 +4,7 @@ const Product = require('../models/product'); // Importamos el modelo Product
 const Cliente = require('../models/cliente'); // Importamos el modelo Cliente
 const router = express.Router(); // Creamos un router para manejar las rutas de pedidos
 
-//Muestra formulario para crear un nuevo pedido
+// Muestra formulario para editar un pedido
 router.get('/editar/:id', async (req, res) => {
   const pedido = await Pedido.findById(req.params.id);
   res.render('editarPedido', { pedido });
@@ -13,15 +13,20 @@ router.get('/editar/:id', async (req, res) => {
 // Actualiza un pedido existente
 router.post('/editar/:id', async (req, res) => {
   const { estado } = req.body;
-  await Pedido.findByIdAndUpdate(req.params.id, { estado });
-  res.redirect('/pedidos');
+  try {
+    await Pedido.findByIdAndUpdate(req.params.id, { estado });
+    res.redirect('/pedidos?mensaje=Estado del pedido actualizado exitosamente');
+  } catch (err) {
+    console.error("Error al actualizar estado del pedido:", err);
+    res.redirect('/pedidos?mensaje=Error al actualizar estado del pedido');
+  }
 });
-
 
 // Muestra todos los pedidos y permite crear uno nuevo
 router.get('/', async (req, res) => {
   try {
     const estadoFiltro = req.query.estado;
+    const mensaje = req.query.mensaje; // 👈 agregamos esto
     let pedidos;
 
     if (estadoFiltro && estadoFiltro !== 'todos') {
@@ -37,14 +42,14 @@ router.get('/', async (req, res) => {
       pedidos,
       clientes,
       productos,
-      estadoSeleccionado: estadoFiltro || 'todos'
+      estadoSeleccionado: estadoFiltro || 'todos',
+      mensaje // 👈 pasamos mensaje
     });
   } catch (err) {
     console.error(err);
     res.status(500).send('Error al obtener pedidos');
   }
 });
-
 
 // Crear un nuevo pedido con múltiples productos
 router.post('/', async (req, res) => {
@@ -95,19 +100,23 @@ router.post('/', async (req, res) => {
     });
 
     await pedido.save();
-    res.redirect('/pedidos');
+    res.redirect('/pedidos?mensaje=Pedido creado exitosamente');
 
   } catch (error) {
-    console.error(error);
-    res.status(500).send("Error al procesar pedido");
+    console.error("Error al procesar pedido:", error);
+    res.redirect('/pedidos?mensaje=Error al procesar pedido');
   }
 });
 
 // Elimina un pedido por su ID
 router.post('/eliminar/:id', async (req, res) => {
-  await Pedido.findByIdAndDelete(req.params.id);
-  res.redirect('/pedidos');
+  try {
+    await Pedido.findByIdAndDelete(req.params.id);
+    res.redirect('/pedidos?mensaje=Pedido eliminado exitosamente');
+  } catch (err) {
+    console.error("Error al eliminar pedido:", err);
+    res.redirect('/pedidos?mensaje=Error al eliminar pedido');
+  }
 });
-
 
 module.exports = router;

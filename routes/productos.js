@@ -7,6 +7,7 @@ router.get('/', async (req, res) => {
   try {
     const queryNombre = req.query.busqueda;
     const queryCategoria = req.query.categoria;
+    const mensaje = req.query.mensaje; // 👈 agregamos esto
 
     let filtro = {};
 
@@ -29,7 +30,8 @@ router.get('/', async (req, res) => {
       productos,
       busqueda: queryNombre || '',
       categoriaSeleccionada: queryCategoria || 'todas',
-      categorias
+      categorias,
+      mensaje // 👈 pasamos mensaje a la vista
     });
   } catch (err) {
     console.error("Error al obtener productos:", err);
@@ -37,30 +39,27 @@ router.get('/', async (req, res) => {
   }
 });
 
-
-
-// Creamos un nuevo producto
-router.post('/', async (req, res) => { // Ruta para crear un nuevo producto
-  // Validamos que el cuerpo de la solicitud contenga los campos necesarios
+// Crear un nuevo producto
+router.post('/', async (req, res) => {
   const { nombre, descripcion, precio, categoria, stock } = req.body;
   try {
     const nuevoProducto = new Producto({ nombre, descripcion, precio, categoria, stock });
     await nuevoProducto.save();
-    res.redirect('/productos'); 
+    res.redirect('/productos?mensaje=Producto creado exitosamente');
   } catch (err) {
-    res.status(500).send('Error al crear producto');
+    console.error("Error al crear producto:", err);
+    res.redirect('/productos?mensaje=Error al crear producto');
   }
 });
 
-
 // Eliminar producto por ID
-router.post('/eliminar/:id', async (req, res) => { // Ruta para eliminar un producto por ID
-  try { // Buscamos el producto por ID y lo eliminamos
+router.post('/eliminar/:id', async (req, res) => {
+  try {
     await Producto.findByIdAndDelete(req.params.id);
-    res.redirect('/productos');
-  } catch (err) { // Si ocurre un error, lo manejamos
+    res.redirect('/productos?mensaje=Producto eliminado exitosamente');
+  } catch (err) {
     console.error("Error al eliminar producto:", err);
-    res.status(500).send('Error al eliminar producto');
+    res.redirect('/productos?mensaje=Error al eliminar producto');
   }
 });
 
@@ -75,8 +74,6 @@ router.get('/editar/:id', async (req, res) => {
   }
 });
 
-
-
 // Guardar cambios del producto editado
 router.post('/editar/:id', async (req, res) => {
   const { nombre, descripcion, precio, categoria, stock } = req.body;
@@ -84,12 +81,11 @@ router.post('/editar/:id', async (req, res) => {
     await Producto.findByIdAndUpdate(req.params.id, {
       nombre, descripcion, precio, categoria, stock
     });
-    res.redirect('/productos');
+    res.redirect('/productos?mensaje=Producto actualizado exitosamente');
   } catch (err) {
     console.error("Error al actualizar el producto:", err);
-    res.status(500).send('Error al actualizar el producto');
+    res.redirect('/productos?mensaje=Error al actualizar producto');
   }
 });
-
 
 module.exports = router;
