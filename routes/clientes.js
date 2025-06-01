@@ -6,6 +6,13 @@ const router = express.Router(); // Crea el router
 router.post('/', async (req, res) => {
   const { nombre, correo, telefono, direccion } = req.body;
   try {
+    // Verificar si ya existe un cliente con el mismo correo
+    const clienteExistente = await Cliente.findOne({ correo });
+
+    if (clienteExistente) {
+      return res.redirect('/clientes?mensaje=Error: Ya existe un cliente con ese correo');
+    }
+
     const nuevoCliente = new Cliente({ nombre, correo, telefono, direccion });
     await nuevoCliente.save();
     res.redirect('/clientes?mensaje=Cliente creado exitosamente');
@@ -14,6 +21,7 @@ router.post('/', async (req, res) => {
     res.redirect('/clientes?mensaje=Error al crear cliente');
   }
 });
+
 
 // Mostrar lista de clientes con buscador
 router.get('/', async (req, res) => {

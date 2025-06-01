@@ -43,6 +43,13 @@ router.get('/', async (req, res) => {
 router.post('/', async (req, res) => {
   const { nombre, descripcion, precio, categoria, stock } = req.body;
   try {
+    // Verificar si ya existe un producto con el mismo nombre
+    const productoExistente = await Producto.findOne({ nombre });
+
+    if (productoExistente) {
+      return res.redirect('/productos?mensaje=Error: Ya existe un producto con ese nombre');
+    }
+
     const nuevoProducto = new Producto({ nombre, descripcion, precio, categoria, stock });
     await nuevoProducto.save();
     res.redirect('/productos?mensaje=Producto creado exitosamente');
@@ -51,6 +58,7 @@ router.post('/', async (req, res) => {
     res.redirect('/productos?mensaje=Error al crear producto');
   }
 });
+
 
 // Eliminar producto por ID
 router.post('/eliminar/:id', async (req, res) => {
