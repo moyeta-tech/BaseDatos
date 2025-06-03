@@ -38,12 +38,16 @@
 </head>
 <body>
   <h1>Editar Producto</h1>
-  <form action="/productos/editar/<%= producto._id %>" method="POST">
+  <form action="/productos/editar/<%= producto._id %>" method="POST" enctype="multipart/form-data">
     <input type="text" name="nombre" value="<%= producto.nombre %>" required />
     <textarea name="descripcion"><%= producto.descripcion %></textarea>
     <input type="text" name="categoria" value="<%= producto.categoria %>" required />
     <input type="number" name="precio" value="<%= producto.precio %>" step="0.01" required />
     <input type="number" name="stock" value="<%= producto.stock %>" required />
+    <input type="file" name="image" accept="image/*" />
+    <% if(producto.imagen) { %>
+          <img src="<%= producto.imagen %>" alt="Imagen Actual" style="max-width: 150px; margin-bottom: 10px;">
+      <% } %>
     <button type="submit" class="btn btn-success">Guardar Cambios</button>
   </form>
   <a href="/productos">← Volver a productos</a>

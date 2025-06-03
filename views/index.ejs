@@ -26,7 +26,38 @@
         </form>
     </div>
     <div class="container">
-        <div class="row my-4">
+               <% if (productos.length === 0) {%>
+                 <p>No hay productos cargados.</p>
+               <% } else { %>
+                    <div class="row">
+                            <% productos.forEach(p => { %>
+                                <div class="col-md-4 mb-4 mt-5">
+                                    <div class="card" style="width: 18rem;">
+                                        <% if (p.imagen) { %>
+                                        <img src="<%= p.imagen %>" class="card-img-top" alt="Imagen del producto">
+                                        <% } %>
+                                        <div class="card-body">
+                                            <h5 class="card-title"><strong>Nombre: </strong><%= p.nombre %></h5>
+                                            <p class="card-text"><strong>Descripción: </strong><%= p.descripcion %></p>
+                                            <p class="card-text"><strong>Precio: </strong><%= p.precio %></p>
+                                            <p class="card-text"><strong>Stock: </strong><%= p.stock %></p>
+                                            <p class="card-text"><strong>Categoria: </strong><%= p.categoria %></p>
+                                            <form action="/productos/eliminar/<%= p._id %>" method="POST" onsubmit="return confirm('¿Estás seguro de eliminar este producto?');">
+                                            <button type="submit" class="btn btn-danger me-2" >Eliminar</button>
+                                          <a href="/productos/editar/<%= p._id %>" class="btn btn-info">Editar</a>
+                                        </form>
+                                       </div>
+                                      </div>
+                                     </div>
+                                    <%}) %>
+                                   </div>
+                                <% }%>
+                            
+                    
+                
+
+        <!--         
+         <div class="row my-4">
             <div class="col-lg-12">
                 <div class="table-responsive">
                     <table id="tablaProductos" class="table table-striped">
@@ -51,7 +82,7 @@
                                     <td class="text-start" style="padding-left: 0;">
                                         <form action="/productos/eliminar/<%= producto._id %>" method="POST" onsubmit="return confirm('¿Estás seguro de eliminar este producto?');">
                                             <button type="submit" class="btn btn-danger me-2" >Eliminar</button>
-                                            <!--Boton para editar-->
+                                            
                                             <a href="/productos/editar/<%= producto._id %>" class="btn btn-info">Editar</a>
                                         </form>
                                     </td>
@@ -61,9 +92,10 @@
                     </table>
                 </div>
             </div>
-        </div>
+        </div> 
+     -->
     </div>
-    <script>
+    <!-- <script>
     $(document).ready(function() {
         $('#tablaProductos').DataTable({
         paging: true,        // Activa la paginación
@@ -82,7 +114,7 @@
       }
     });
   });
-    </script>
+    </script> -->
 
 </body>
 </html>

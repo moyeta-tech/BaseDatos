@@ -1,13 +1,26 @@
 const express = require('express'); // Importamos express
 const Producto = require('../models/product'); // Importamos el modelo de producto
 const router = express.Router(); // Creamos un router para manejar las rutas de productos
+const multer = require('multer'); // Importamos multer para manejar la subida de archivos
+const path = require('path');
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'public/uploads/');
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + path.extname(file.originalname));
+  }
+});
+
+const upload = multer({ storage: storage });
 
 // Obtener productos
 router.get('/', async (req, res) => {
   try {
     const queryNombre = req.query.busqueda;
     const queryCategoria = req.query.categoria;
-    const mensaje = req.query.mensaje; // 👈 agregamos esto
+    const mensaje = req.query.mensaje; // agregamos esto
 
     let filtro = {};
 
@@ -40,8 +53,9 @@ router.get('/', async (req, res) => {
 });
 
 // Crear un nuevo producto
-router.post('/', async (req, res) => {
+router.post('/', upload.single('image'), async (req, res) => {
   const { nombre, descripcion, precio, categoria, stock } = req.body;
+  const imagen = req.file ? '/uploads/' + req.file.filename : null;
   try {
     // Verificar si ya existe un producto con el mismo nombre
     const productoExistente = await Producto.findOne({ nombre });
@@ -50,7 +64,7 @@ router.post('/', async (req, res) => {
       return res.redirect('/productos?mensaje=Error: Ya existe un producto con ese nombre');
     }
 
-    const nuevoProducto = new Producto({ nombre, descripcion, precio, categoria, stock });
+    const nuevoProducto = new Producto({ nombre, descripcion, precio, categoria, stock, imagen });
     await nuevoProducto.save();
     res.redirect('/productos?mensaje=Producto creado exitosamente');
   } catch (err) {
@@ -83,8 +97,12 @@ router.get('/editar/:id', async (req, res) => {
 });
 
 // Guardar cambios del producto editado
-router.post('/editar/:id', async (req, res) => {
+router.post('/editar/:id', upload.single('image') ,async (req, res) => {
   const { nombre, descripcion, precio, categoria, stock } = req.body;
+  let updateFields = { nombre, descripcion, precio, categoria, stock };
+  if (req.file) {
+    updateFields.imagen = '/uploads/' + req.file.filename; // Actualizar imagen si se subió una nueva
+  }
   try {
     await Producto.findByIdAndUpdate(req.params.id, {
       nombre, descripcion, precio, categoria, stock

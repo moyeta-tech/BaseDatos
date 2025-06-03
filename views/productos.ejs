@@ -41,12 +41,17 @@
 
   <body>
     <h1>Crear Producto</h1>
-    <form action="/productos" method="POST">
+    <form action="/productos" method="POST" enctype="multipart/form-data">
       <input type="text" name="nombre" placeholder="Nombre del producto" required />
       <textarea name="descripcion" placeholder="Descripción"></textarea>
       <input type="text" name="categoria" placeholder="Categoría" required />
       <input type="number" name="precio" placeholder="Precio" step="0.01" required />
       <input type="number" name="stock" placeholder="Stock" required />
+
+      <div class="mb-3">
+        <label for="image" class="form-label">Imagen del producto</label>
+        <input type="file" class="form-control" name="image" accept="image/*" />
+      </div>
       <button type="submit" class="btn btn-success">Guardar</button>
     </form>
 
