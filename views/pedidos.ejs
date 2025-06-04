@@ -30,6 +30,7 @@
 
     <body>
         <h1>Crear Pedido</h1>
+        <a href="/" class="btn btn-warning text-center mb-4">Volver al inicio</a> <!-- Botón para volver al inicio -->
         <form action="/pedidos" method="POST">
             <label>Cliente:</label>
             <select name="cliente_id" required>
@@ -106,6 +107,5 @@
                 </div>
             <% }); %>
         <% } %>
-        <a href="/" class="btn btn-warning" class="text-center">Volver al inicio</a> <!-- Botón para volver al inicio -->
     </body>
 </html>

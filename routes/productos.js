@@ -104,9 +104,7 @@ router.post('/editar/:id', upload.single('image') ,async (req, res) => {
     updateFields.imagen = '/uploads/' + req.file.filename; // Actualizar imagen si se subió una nueva
   }
   try {
-    await Producto.findByIdAndUpdate(req.params.id, {
-      nombre, descripcion, precio, categoria, stock
-    });
+    await Producto.findByIdAndUpdate(req.params.id, updateFields);
     res.redirect('/productos?mensaje=Producto actualizado exitosamente');
   } catch (err) {
     console.error("Error al actualizar el producto:", err);

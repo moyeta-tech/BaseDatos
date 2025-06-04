@@ -13,6 +13,17 @@
 
     <!-- DataTables JS -->
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <style>
+        .card{
+            width: 18rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .card:hover{
+            transform: translateY(-5px);
+            box-shadow: 0 8px 24px rgba(99, 62, 238, 0.2), 0 1.5px 6px rgba(0,0,0,0.08);
+            cursor:default;
+        }
+    </style>
 
   <title>Home</title>
 </head>
@@ -32,7 +43,7 @@
                     <div class="row">
                             <% productos.forEach(p => { %>
                                 <div class="col-md-4 mb-4 mt-5">
-                                    <div class="card" style="width: 18rem;">
+                                    <div class="card">
                                         <% if (p.imagen) { %>
                                         <img src="<%= p.imagen %>" class="card-img-top" alt="Imagen del producto">
                                         <% } %>

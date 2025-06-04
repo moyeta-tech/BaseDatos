@@ -41,6 +41,7 @@
 
   <body>
     <h1>Crear Producto</h1>
+    <a href="/" class="btn btn-warning text-center mb-4">Volver al inicio</a> <!-- Botón para volver al inicio -->
     <form action="/productos" method="POST" enctype="multipart/form-data">
       <input type="text" name="nombre" placeholder="Nombre del producto" required />
       <textarea name="descripcion" placeholder="Descripción"></textarea>
@@ -105,6 +106,5 @@
       </div>
       <% }); %>
     <% } %>
-    <a href="/" class="btn btn-warning text-center">Volver al inicio</a> <!-- Botón para volver al inicio -->
   </body>
 </html>
