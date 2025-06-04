@@ -30,21 +30,22 @@ router.get('/ventas-por-mes', async (req, res) => {
       {
         $group: {
           _id: { 
-            mes: { $month: "$fecha" },
-            anio: { $year: "$fecha" }
+            mes: { $month: "$fecha" }, // agrupa por mes de la fecha
+            anio: { $year: "$fecha" }  // agrupa por año de la fecha
           },
           totalRecaudado: { $sum: "$total" },
           cantidadPedidos: { $sum: 1 }
         }
       },
-      { $sort: { "_id.anio": -1, "_id.mes": -1 } } // Orden descendente
+      { $sort: { "_id.anio": -1, "_id.mes": -1 } } // orden descendente (últimos meses primero)
     ]);
 
-    res.render('informeVentasMes', { informe });
+    res.render('informeVentasPorMes', { informe }); // ✅ nombre de la vista
   } catch (err) {
     console.error("Error al generar informe por mes:", err);
     res.status(500).send('Error al generar informe de ventas por mes');
   }
 });
+
 
 module.exports = router;
