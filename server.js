@@ -18,6 +18,8 @@ app.set('views', './views'); // Establecemos la carpeta de vistas
 app.use('/productos', require('./routes/productos')); // Usamos las rutas de productos
 app.use('/pedidos', require('./routes/pedidos')); // Usamos las rutas de pedidos
 app.use('/clientes', require('./routes/clientes')); // Usamos las rutas de clientes
+app.use('/informes', require('./routes/informes')); // Usamos las rutas de informes
+
 
 app.use(express.static('public')); // Servimos archivos estáticos desde la carpeta public
 app.get('/', async (req, res) => {
