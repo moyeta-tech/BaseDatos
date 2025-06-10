@@ -19,11 +19,29 @@
     <script>
     document.querySelector('form').addEventListener('submit', function(e) {
         const checkboxes = document.querySelectorAll('input[type="checkbox"][name="producto_id"]');
-        const oneChecked = Array.from(checkboxes).some(cb => cb.checked);
+        let oneChecked = false;
+        let valid = true;
+        
+        checkboxes.forEach(cb =>{
+            if(cb.checked){
+                oneChecked = true;
+                const cantidadInput = document.querySelector('input[type="number"][name="cantidad"]');
+                if(!cantidadInput.value || parseInt(cantidadInput.value) < 1){
+                    valid = false;
+                }
+            }
+        });
 
-        if (!oneChecked) {
-        e.preventDefault();
-        alert('Debes seleccionar al menos un producto.');
+        if(!oneChecked){
+            e.preventDefault();
+            alert("Debes seleccionar al menos un producto");
+            return;
+        }
+
+        if(!valid){
+            e.preventDefault();
+            alert("Introduzca valores correctos por favor");
+            return;
         }
     });
     </script>
